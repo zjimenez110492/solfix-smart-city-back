@@ -7,7 +7,7 @@ app.set('llave', config.llave);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const usuarios=[{nombre:'jhonatan', password:'123'},{nombre:'zjimenez@u', password:'123'}]
+const usuarios=[{nombre:'jhonatan@a', password:'123'},{nombre:'zjimenez@u', password:'123'}]
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -16,7 +16,6 @@ app.use(function(req, res, next) {
   });
   const rutasProtegidas = express.Router(); 
         rutasProtegidas.use((req, res, next) => {
-            console.log("COMPROBANDO TOKEN:  ",req.headers);
             const token = req.headers['authorization'];
         
             if (token) {
@@ -36,28 +35,32 @@ app.use(function(req, res, next) {
         });
 
 app.get('/centro', rutasProtegidas,(req,res)=>{
-    console.log("CENTRO...");
     res.json({
         longitud:-76.5225,
         latitud: 3.43722,
         descripcion:""
     });
 });
-app.get('/coordenadas',(req,res)=>{
+app.get('/coordenadas',rutasProtegidas,(req,res)=>{
     res.json([{
-        longitud:-76.5225,
-        latitud: 3.43722,
-        descripcion:"Cali 1"
+        latitud:-76.5425,
+        longitud: 3.43722,
+        descripcion:"Carrera 25 - Calle 2A"
     },
     {
-        longitud:-76.52,
-        latitud: 3.43722,
-        descripcion:"Cali 2"
+        latitud:-76.52,
+        longitud: 3.49,
+        descripcion:"Calle 58N- aVENIDA 4B"
     },
     {
-        longitud:-76.5225,
-        latitud: 3.437,
-        descripcion:"Cali 3"
+        latitud:-76.5025,
+        longitud: 3.437,
+        descripcion:"Carrera 25 - Calle 42"
+    },
+    {
+        latitud:-76.53,
+        longitud: 3.38,
+        descripcion:"Carrera 86- Calle 15A"
     }]);
 });
 app.post('/usuario', function (req, res, next) 
@@ -66,7 +69,6 @@ app.post('/usuario', function (req, res, next)
     let token="";
 	for(let u of usuarios)
     {
-        console.log("entrada:   ",req.body.usuario,"   LOCAL:  ",u.nombre);
         if(req.body.usuario==u.nombre)
         {           
             band=true;
@@ -75,7 +77,6 @@ app.post('/usuario', function (req, res, next)
               
         }        
     }
-	console.log(req.body.usuario); 
     if(band)
 	    res.send({ status: 'SUCCESS',res:band, token:token });
     else	    
